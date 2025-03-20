@@ -3,11 +3,15 @@ package com.example.ludotehque.bo;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Data
 @Table(name= "JEU")
 public class Jeu {
@@ -15,16 +19,20 @@ public class Jeu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer noJeu;
     @Column(nullable = false, length = 50)
+    @NonNull
     private String titre;
     @Column(nullable = false, length = 50)
+    @NonNull
     private String reference;
-    @Column
+    @Column @NonNull
     private Integer ageMin;
     @Column(columnDefinition = "TEXT")
+    @NonNull
     private String description;
-    @Column
+    @Column @NonNull
     private Integer duree;
     @Column(nullable = false, scale = 2)
+    @NonNull
     private Float tarifJour;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
@@ -33,5 +41,9 @@ public class Jeu {
             joinColumns = {@JoinColumn(name = "no_jeu")},
             inverseJoinColumns = {@JoinColumn(name = "no_genre")}
     )
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
+
+    public void addGenre(Genre genre) {
+        genres.add(genre);
+    }
 }
