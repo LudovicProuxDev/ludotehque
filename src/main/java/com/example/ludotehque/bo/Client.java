@@ -19,4 +19,8 @@ public class Client {
     private String email;
     @Column(nullable = false, length = 20)
     private String telephone;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "no_adresse")
+    private Adresse adresse;
 }
