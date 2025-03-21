@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class ClientRepositoryTest {
@@ -22,11 +23,11 @@ public class ClientRepositoryTest {
 
     @Test
     @DisplayName("Creation d'un Client et d'une Adresse - cas positif")
-    @Transactional
     public void testCreationClient() {
         // Arrange
         Adresse adresse = new Adresse("Avenue Léo Lagrange","79000","NIORT");
-        Client client = new Client("Nom","Prenom","email@email.com","+33606060606",adresse);
+        Client client = new Client("Nom","Prenom","email@email.com","+33606060606");
+        client.setAdresse(adresse);
 
         //Act
         clientRepository.save(client);
@@ -41,11 +42,12 @@ public class ClientRepositoryTest {
     }
 
     @Test
-    @DisplayName("Creation d'un Client avec email identique")
+    @DisplayName("Creation d'un Client avec email identique - cas negatif")
     public void testCreationClientEmailIdentique() {
         // Arrange
         Adresse adresse = new Adresse("Avenue Léo Lagrange","79000","NIORT");
-        Client client = new Client("Nom","Prenom","email@email.com","+33606060606",adresse);
+        Client client = new Client("Nom","Prenom","email@email.com","+33606060606");
+        client.setAdresse(adresse);
         long nbClients = clientRepository.count();
 
         // Act - Assert
@@ -54,8 +56,8 @@ public class ClientRepositoryTest {
     }
 
     @Test
-    @DisplayName("Recherche d'un Client par son identifiant")
-    public void testFindByIdclient() {
+    @DisplayName("Recherche d'un Client par son identifiant - cas positif")
+    public void testFindByIdClient() {
         // Arrange
         Integer idclient = 1;
 
@@ -65,5 +67,15 @@ public class ClientRepositoryTest {
         // Assert
         assertNotNull(clientOpt.isPresent());
         assertEquals(1, clientOpt.get().getNoClient());
+    }
+
+    @Test
+    @DisplayName("Creation d'un Client sans Adresse - cas negatif")
+    public void testCreationClientSansAdresse() {
+        // Arrange
+        Client client = new Client("Nom","Prenom","email@email.com","+33606060606");
+
+        // Act - Assert
+        assertThrows(DataIntegrityViolationException.class, () -> {clientRepository.save(client);});
     }
 }
