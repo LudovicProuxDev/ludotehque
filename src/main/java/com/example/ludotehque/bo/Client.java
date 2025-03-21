@@ -27,6 +27,5 @@ public class Client {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "no_adresse", nullable = false)
-    @NonNull
     private Adresse adresse;
 }
