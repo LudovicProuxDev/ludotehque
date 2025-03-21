@@ -78,4 +78,25 @@ public class ClientRepositoryTest {
         // Act - Assert
         assertThrows(DataIntegrityViolationException.class, () -> {clientRepository.save(client);});
     }
+
+
+    @Test
+    @DisplayName("Recherche clients par nom - cas positif")
+    public void testFindByNomClientCasPositif() {
+        // Arrange
+        String nom = "Nom";
+
+        // Act - Assert
+        assertEquals(true, !clientRepository.findClientsByNom(nom).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Recherche clients par nom - cas negatif")
+    public void testFindByNomClientCasNegatif() {
+        // Arrange
+        String nom = "Hello World";
+
+        // Act - Assert
+        assertEquals(true, clientRepository.findClientsByNom(nom).isEmpty());
+    }
 }
