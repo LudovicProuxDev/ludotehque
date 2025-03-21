@@ -24,7 +24,8 @@ public class ClientServiceTest {
     public void testAjouterClientCasPositif() {
         //Arrange
         Adresse adresse = new Adresse("rue des Cormorans", "44860", "Saint Aignan Grand Lieu");
-        Client client = new Client("n1", "p1", "e1", "tel1", adresse);
+        Client client = new Client("n1", "p1", "e1", "tel1");
+        client.setAdresse(adresse);
 
         org.mockito.Mockito.doAnswer((invocation) -> {
             Client cli = invocation.getArgument(0);
