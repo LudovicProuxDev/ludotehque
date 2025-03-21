@@ -2,6 +2,7 @@ package com.example.ludotehque.dal;
 
 import com.example.ludotehque.bo.Adresse;
 import com.example.ludotehque.bo.Client;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -19,19 +21,23 @@ public class ClientRepositoryTest {
     private ClientRepository clientRepository;
 
     @Test
-    @DisplayName("Creation d'un Client")
+    @DisplayName("Creation d'un Client et d'une Adresse - cas positif")
+    @Transactional
     public void testCreationClient() {
         // Arrange
         Adresse adresse = new Adresse("Avenue Léo Lagrange","79000","NIORT");
         Client client = new Client("Nom","Prenom","email@email.com","+33606060606",adresse);
-        long nbClients = clientRepository.count();
 
-        // Act
+        //Act
         clientRepository.save(client);
 
-        // Assert
-        assertNotNull(client.getNoClient());
-        assertEquals(clientRepository.count(),nbClients+1);
+        //Assert
+        assertThat(client.getNoClient()).isNotNull();
+        Optional<Client> clientBD = clientRepository.findById(client.getNoClient());
+        assertThat(clientBD.isPresent()).isTrue();
+        if(clientBD.isPresent()) {
+            assertThat(clientBD.get()).isEqualTo(client);
+        }
     }
 
     @Test
