@@ -2,7 +2,6 @@ package com.example.ludotehque.dal;
 
 import com.example.ludotehque.bo.Adresse;
 import com.example.ludotehque.bo.Client;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,5 +97,39 @@ public class ClientRepositoryTest {
 
         // Act - Assert
         assertEquals(true, clientRepository.findClientsByNom(nom).isEmpty());
+    }
+
+    @Test
+    @DisplayName("Modification d'un Client et d'une Adresse - cas positif")
+    public void testModificationClient() {
+        // Arrange
+        Optional<Client> clientBD = clientRepository.findById(1);
+        Adresse clientAdresse = clientBD.get().getAdresse();
+        clientBD.get().setNom("PROUX");
+        clientBD.get().setPrenom("Ludovic");
+        clientBD.get().setTelephone("0606060606");
+        clientBD.get().setEmail("ludovic.proux@email.com");
+        clientBD.get().getAdresse().setRue("Avenue du Maréchal Juin");
+        clientBD.get().getAdresse().setCodePostal("17000");
+        clientBD.get().getAdresse().setVille("LA ROCHELLE");
+
+        //Act
+        clientRepository.save(clientBD.get());
+
+        //Assert
+        clientBD = clientRepository.findById(1);
+        assertThat(clientBD.isPresent()).isTrue();
+        assertThat(clientBD.get().getAdresse().getNoAdresse()).isNotNull();
+        if(clientBD.isPresent()) {
+            assertEquals(1, clientBD.get().getNoClient());
+            assertEquals("PROUX", clientBD.get().getNom());
+            assertEquals("Ludovic", clientBD.get().getPrenom());
+            assertEquals("ludovic.proux@email.com", clientBD.get().getEmail());
+            assertEquals("0606060606", clientBD.get().getTelephone());
+            assertThat(clientBD.get().getAdresse().getNoAdresse()).isEqualTo(clientAdresse.getNoAdresse());
+            assertEquals("Avenue du Maréchal Juin", clientBD.get().getAdresse().getRue());
+            assertEquals("17000", clientBD.get().getAdresse().getCodePostal());
+            assertEquals("LA ROCHELLE", clientBD.get().getAdresse().getVille());
+        }
     }
 }
