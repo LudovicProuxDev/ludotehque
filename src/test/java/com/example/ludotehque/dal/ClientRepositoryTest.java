@@ -132,4 +132,29 @@ public class ClientRepositoryTest {
             assertEquals("LA ROCHELLE", clientBD.get().getAdresse().getVille());
         }
     }
+
+    @Test
+    @DisplayName("Modification de l'Adresse du Client - cas positif")
+    public void testModificationAdresseClient() {
+        // Arrange
+        Optional<Client> clientBD = clientRepository.findById(1);
+        Adresse clientAdresse = clientBD.get().getAdresse();
+        clientBD.get().getAdresse().setRue("Avenue Léo Lagrange");
+        clientBD.get().getAdresse().setCodePostal("79000");
+        clientBD.get().getAdresse().setVille("NIORT");
+
+        //Act
+        clientRepository.save(clientBD.get());
+
+        //Assert
+        clientBD = clientRepository.findById(1);
+        assertThat(clientBD.isPresent()).isTrue();
+        assertThat(clientBD.get().getAdresse().getNoAdresse()).isNotNull();
+        if(clientBD.isPresent()) {
+            assertThat(clientBD.get().getAdresse().getNoAdresse()).isEqualTo(clientAdresse.getNoAdresse());
+            assertEquals("Avenue Léo Lagrange", clientBD.get().getAdresse().getRue());
+            assertEquals("79000", clientBD.get().getAdresse().getCodePostal());
+            assertEquals("NIORT", clientBD.get().getAdresse().getVille());
+        }
+    }
 }
