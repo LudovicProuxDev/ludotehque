@@ -17,20 +17,21 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer noLocation;
-    @Column(columnDefinition = "DATETIME")
-    @NonNull
+    @Column @NonNull
     private LocalDateTime dateDebut;
-    @Column(columnDefinition = "DATETIME")
+    @Column
     private LocalDateTime dateRetour;
     @Column(nullable = false, scale = 2)
     @NonNull
     private Float tarifJour;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name="no_client")
-    @NonNull private Client client;
+    @JoinColumn(name="no_client", nullable = false)
+    @NonNull
+    private Client client;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-    @JoinColumn(name="no_exemplaire")
-    @NonNull private Exemplaire exemplaire;
+    @JoinColumn(name="no_exemplaire", nullable = false)
+    @NonNull
+    private Exemplaire exemplaire;
 }

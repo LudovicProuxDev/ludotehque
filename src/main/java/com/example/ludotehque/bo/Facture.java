@@ -18,8 +18,7 @@ public class Facture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer noFacture;
-    @Column(columnDefinition = "DATETIME")
-    @NonNull
+    @Column @NonNull
     private LocalDateTime datePaiement;
 
     @OneToMany

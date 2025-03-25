@@ -22,6 +22,7 @@ public class Exemplaire {
     private Boolean louable;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "no_jeu", nullable = false)
     @NonNull
     private Jeu jeu;
 }
