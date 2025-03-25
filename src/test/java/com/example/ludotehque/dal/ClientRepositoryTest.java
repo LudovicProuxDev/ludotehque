@@ -86,7 +86,7 @@ public class ClientRepositoryTest {
         String nom = "Nom";
 
         // Act - Assert
-        assertEquals(true, !clientRepository.findClientsByNomContaining(nom).isEmpty());
+        assertEquals(true, !clientRepository.findByNomContaining(nom).isEmpty());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class ClientRepositoryTest {
         String nom = "Hello World";
 
         // Act - Assert
-        assertEquals(true, clientRepository.findClientsByNomContaining(nom).isEmpty());
+        assertEquals(true, clientRepository.findByNomContaining(nom).isEmpty());
     }
 
     @Test
