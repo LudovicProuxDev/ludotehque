@@ -13,7 +13,6 @@ import org.springframework.lang.NonNull;
 @Table(name= "GENRE")
 public class Genre {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer noGenre;
     @Column(nullable = false, length = 50)
     @NonNull
