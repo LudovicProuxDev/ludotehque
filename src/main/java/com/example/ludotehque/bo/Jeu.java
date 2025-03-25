@@ -35,15 +35,18 @@ public class Jeu {
     @NonNull
     private Float tarifJour;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "JEU_GENRE",
             joinColumns = {@JoinColumn(name = "no_jeu")},
-            inverseJoinColumns = {@JoinColumn(name = "no_genre")}
+            inverseJoinColumns = {@JoinColumn(name = "no_genre")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = { "no_jeu", "no_genre" })}
     )
     private List<Genre> genres = new ArrayList<>();
 
     public void addGenre(Genre genre) {
         genres.add(genre);
     }
+
+    public void removeGenre(Genre genre) { genres.remove(genre); }
 }
