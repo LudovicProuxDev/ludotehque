@@ -4,9 +4,11 @@ import com.example.ludotehque.bo.Adresse;
 import com.example.ludotehque.bo.Client;
 import com.example.ludotehque.dal.AdresseRepository;
 import com.example.ludotehque.dal.ClientRepository;
+import com.example.ludotehque.dto.ClientDTO;
 import com.example.ludotehque.exceptions.DataNotFound;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +23,13 @@ public class ClientServiceImpl implements ClientService {
     private AdresseRepository adresseRepository;
 
     @Override
-    public void ajouterClient(Client client) {
-        clientRepository.save(client);
+    public Client ajouterClient(ClientDTO clientDTO) {
+        Client client = new Client();
+        Adresse adresse = new Adresse();
+        BeanUtils.copyProperties(clientDTO, client);
+        BeanUtils.copyProperties(clientDTO, adresse);
+        client.setAdresse(adresse);
+        return clientRepository.save(client);
     }
 
     @Override
@@ -40,11 +47,25 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void modifierClient(Client client) {
-        if(client.getNoClient()==null) {
-            throw new IllegalStateException();
+    public Client modifierClient(Integer noClient, ClientDTO clientDTO) {
+        Optional<Client> optClient = clientRepository.findById(noClient);
+        if(optClient.isEmpty()) {
+            throw new DataNotFound("Client", noClient);
         }
-        clientRepository.save(client);
+        if (clientDTO.getNom()==null) {
+            clientDTO.setNom(optClient.get().getNom());
+        }
+        if (clientDTO.getPrenom()==null) {
+            clientDTO.setPrenom(optClient.get().getPrenom());
+        }
+        if (clientDTO.getEmail()==null) {
+            clientDTO.setEmail(optClient.get().getEmail());
+        }
+        if (clientDTO.getTelephone()==null) {
+            clientDTO.setTelephone(optClient.get().getTelephone());
+        }
+        BeanUtils.copyProperties(clientDTO, optClient.get().getAdresse());
+        return clientRepository.save(optClient.get());
     }
 
     @Override
@@ -58,5 +79,14 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<Client> trouverClients() {
         return clientRepository.findAll();
+    }
+
+    @Override
+    public void supprimerClient(Integer id) {
+        Optional<Client> optClient = clientRepository.findById(id);
+        if(optClient.isEmpty()) {
+            throw new DataNotFound("Client", id);
+        }
+        clientRepository.delete(optClient.get());
     }
 }
