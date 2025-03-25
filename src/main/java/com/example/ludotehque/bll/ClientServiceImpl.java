@@ -64,6 +64,7 @@ public class ClientServiceImpl implements ClientService {
         if (clientDTO.getTelephone()==null) {
             clientDTO.setTelephone(optClient.get().getTelephone());
         }
+        BeanUtils.copyProperties(clientDTO, optClient.get());
         BeanUtils.copyProperties(clientDTO, optClient.get().getAdresse());
         return clientRepository.save(optClient.get());
     }
