@@ -54,4 +54,9 @@ public class ClientServiceImpl implements ClientService {
         }
         adresseRepository.save(adresse);
     }
+
+    @Override
+    public List<Client> trouverClients() {
+        return clientRepository.findAll();
+    }
 }

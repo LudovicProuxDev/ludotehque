@@ -15,4 +15,6 @@ public interface ClientService {
     void modifierClient(Client client);
 
     void modifierAdresse(Adresse adresse);
+
+    List<Client> trouverClients();
 }
